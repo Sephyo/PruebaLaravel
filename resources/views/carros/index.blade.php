@@ -6,7 +6,7 @@
         </h1>
     </x-slot>
 
-    <div class="container mx-auto px-4 py-6">
+    <div class="container mx-auto px-4 py-6" x-data="{ imagenModal: null }">
         <a href="{{ route('carros.create') }}" class="btn btn-primary mb-3">Agregar Carro</a>
 
         @if(session('success'))
@@ -69,7 +69,15 @@
                             <td>{{ $carro->kilometraje }} km</td>
                             <td>
                                 @if($carro->imagen)
-                                    <img src="{{ asset('storage/' . $carro->imagen) }}" alt="Imagen" style="width: 80px;">
+                                    <button
+                                        class="btn btn-info btn-sm"
+                                        @click="imagenModal = '{{ $carro->imagen }}'"
+                                        type="button"
+                                    >
+                                        Ver imagen
+                                    </button>
+                                @else
+                                    <span class="text-gray-400">Sin imagen</span>
                                 @endif
                             </td>
                             <td>
@@ -84,7 +92,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">No hay carros registrados.</td>
+                            <td colspan="8" class="text-center">No hay carros registrados.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -94,6 +102,21 @@
         {{-- Paginación --}}
         <div class="mt-4">
             {{ $carros->links() }}
+        </div>
+
+        <!-- Modal para mostrar la imagen -->
+        <div
+            x-show="imagenModal"
+            style="display: none;"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50"
+        >
+            <div class="bg-white rounded-lg shadow-lg p-4 max-w-lg w-full relative">
+                <button
+                    class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-2xl"
+                    @click="imagenModal = null"
+                >&times;</button>
+                <img :src="imagenModal" alt="Imagen del carro" class="w-full h-auto rounded" />
+            </div>
         </div>
     </div>
 </x-app-layout>

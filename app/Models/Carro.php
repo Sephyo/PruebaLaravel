@@ -16,5 +16,6 @@ class Carro extends Model
         'precio',
         'kilometraje',
         'user_id',
+        'imagen',
     ];
 }

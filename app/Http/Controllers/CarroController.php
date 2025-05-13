@@ -82,7 +82,8 @@ class CarroController extends Controller
         $data['user_id'] = auth()->id();
 
         if ($request->hasFile('imagen')) {
-            $data['imagen'] = $request->file('imagen')->store('carros', 'public');
+            $path = $request->file('imagen')->store('carros', 'public');
+            $data['imagen'] = '/storage/' . $path;
         }
 
         Carro::create($data);
@@ -129,9 +130,11 @@ class CarroController extends Controller
         if ($request->hasFile('imagen')) {
             // Elimina la imagen anterior si existe
             if ($carro->imagen) {
-                Storage::disk('public')->delete($carro->imagen);
+                $imagenPath = str_replace('/storage/', '', $carro->imagen);
+                Storage::disk('public')->delete($imagenPath);
             }
-            $data['imagen'] = $request->file('imagen')->store('carros', 'public');
+            $path = $request->file('imagen')->store('carros', 'public');
+            $data['imagen'] = '/storage/' . $path; // Guarda la URL pública
         }
 
         $carro->update($data);
